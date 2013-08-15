@@ -94,6 +94,14 @@ EOF
 
 chmod +x boot.sh
 
+# determine the content path
+if [ -d $BUILD_DIR/content ]; then
+  CONTENT_DIR=$BUILD_DIR/content
+else
+  CONTENT_DIR=$BUILD_DIR
+fi
+echo "-----> Using $CONTENT_DIR as content directory"
+
 # make compiled content path
 mkdir -p $COMPILE_PATH
 
@@ -102,10 +110,10 @@ cd $BUILD_DIR
 
 if [ ! -d $BUILD_DIR/theme/templates ]; then
   echo "-----> Generating static content for deploy with default theme"
-  bin/pelican $BUILD_DIR -s $BUILD_DIR/pelicanconf.py -o $COMPILE_PATH
+  bin/pelican $CONTENT_DIR -s $BUILD_DIR/pelicanconf.py -o $COMPILE_PATH
 else
   echo "-----> Generating static content for deploy with custom theme"
-  bin/pelican $BUILD_DIR -s $BUILD_DIR/pelicanconf.py -o $COMPILE_PATH -t $BUILD_DIR/theme
+  bin/pelican $CONTENT_DIR -s $BUILD_DIR/pelicanconf.py -o $COMPILE_PATH -t $BUILD_DIR/theme
 fi
 
 # repack cache
